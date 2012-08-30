@@ -31,6 +31,8 @@ nv.models.multiBarChart = function() {
     , dispatch = d3.dispatch('tooltipShow', 'tooltipHide')
     ;
 
+  var controlsBottom = false;
+
   multibar
     .stacked(false)
     ;
@@ -133,7 +135,10 @@ nv.models.multiBarChart = function() {
       // Legend
 
       if (showLegend) {
-        legend.width(availableWidth / 2);
+		if(controlsBottom)
+        	legend.width(availableWidth);
+ 		else
+			legend.width(availableWidth / 2);
 
         g.select('.nv-legendWrap')
             .datum(data)
@@ -146,7 +151,7 @@ nv.models.multiBarChart = function() {
         }
 
         g.select('.nv-legendWrap')
-            .attr('transform', 'translate(' + (availableWidth / 2) + ',' + (-margin.top) +')');
+            .attr('transform', 'translate(' + (availableWidth / 2 ) + ',' + (-margin.top) +')');
       }
 
       //------------------------------------------------------------
@@ -161,10 +166,15 @@ nv.models.multiBarChart = function() {
           { key: 'Stacked', disabled: !multibar.stacked() }
         ];
 
+		if(controlsBottom)
+			controlsTransformator = 'translate(' + (availableWidth / 2 - 2* margin.left ) + ',' + (availableHeight +15) +')';
+		else
+			controlsTransformator = 'translate(0,' + (-margin.top) +')'
+			
         controls.width(180).color(['#444', '#444', '#444']);
         g.select('.nv-controlsWrap')
             .datum(controlsData)
-            .attr('transform', 'translate(0,' + (-margin.top) +')')
+            .attr('transform', controlsTransformator) // mike edit
             .call(controls);
       }
 
